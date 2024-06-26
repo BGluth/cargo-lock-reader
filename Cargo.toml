@@ -1,7 +1,3 @@
-[package]
-name = "cargo-lock-reader"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-thiserror = "1.0.61"
+[workspace]
+members = ["core", "proc-macros"]
+resolver = "2"

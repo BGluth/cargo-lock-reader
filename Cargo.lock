@@ -3,11 +3,15 @@
 version = 3
 
 [[package]]
-name = "cargo-lock-reader"
+name = "cargo-lock-reader-core"
 version = "0.1.0"
 dependencies = [
  "thiserror",
 ]
+
+[[package]]
+name = "cargo-lock-reader-proc_macros"
+version = "0.1.0"
 
 [[package]]
 name = "proc-macro2"
