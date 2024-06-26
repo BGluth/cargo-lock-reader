@@ -9,3 +9,4 @@ license.workspace = true
 proc-macro = true
 
 [dependencies]
+cargo-lock = "9.0.0"
