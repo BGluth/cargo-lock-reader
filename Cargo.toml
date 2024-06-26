@@ -1,3 +1,8 @@
 [workspace]
 members = ["core", "proc_macros"]
 resolver = "2"
+
+[workspace.package]
+authors =  ["gluthb <gluthb@gmail.com>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
