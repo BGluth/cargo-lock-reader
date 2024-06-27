@@ -1,4 +1,24 @@
+use proc_macro::TokenStream;
+
 pub(crate) mod cargo_lock_db;
+
+/// Runs the `Cargo.lock` query at compile time.
+///
+/// We want to allow any syntax that is valid for `Lockfile` in `cargo-lockfile`. If your normal "query" against the lockfile was this:
+/// ```rust
+/// lockfile.some.query()
+/// ```
+///
+/// Then you would translate it to `lockfile!` like this:
+/// ```rust
+/// lockfile!(some.query())
+/// ```
+///
+/// Note that this macro statically loads in the project's `Cargo.lock`, so if there are multiple invocations of this macro, then it will only read in the project's `Cargo.lock` once per crate.
+#[proc_macro]
+pub fn lockfile(_lockfile_query: TokenStream) -> TokenStream {
+    todo!()
+}
 
 #[cfg(test)]
 mod tests {

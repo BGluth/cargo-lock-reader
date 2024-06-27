@@ -20,7 +20,6 @@ pub enum LockFileSearchError {
 
 pub fn find_cargo_lock_file_path() -> LockFileSearchResult<PathBuf> {
     let manifest_dir = env!("CARGO_MANIFEST_DIR");
-
     let manifest_dir_path_buf = PathBuf::from_str(manifest_dir).unwrap();
 
     // Internal error type is `Infallible`, so we're good to use `unwrap()` here.
