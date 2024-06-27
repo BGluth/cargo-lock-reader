@@ -2,6 +2,7 @@ use std::{
     fs::{self, DirEntry},
     io,
     path::PathBuf,
+    str::FromStr,
 };
 
 use thiserror::Error;
@@ -17,18 +18,24 @@ pub enum LockFileSearchError {
     Io(#[from] io::Error),
 }
 
-pub(crate) fn find_cargo_lock_file() -> LockFileSearchResult<PathBuf> {
+pub fn find_cargo_lock_file_path() -> LockFileSearchResult<PathBuf> {
     let manifest_dir = env!("CARGO_MANIFEST_DIR");
-    println!("{}", manifest_dir);
 
-    for entry in fs::read_dir(manifest_dir)? {
-        let entry = entry?;
+    let manifest_dir_path_buf = PathBuf::from_str(manifest_dir).unwrap();
 
-        println!("ENTRY: {:?}", entry);
+    // Internal error type is `Infallible`, so we're good to use `unwrap()` here.
+    let mut curr_dir = manifest_dir_path_buf.as_path();
 
-        if dir_entry_is_cargo_lockfile(&entry)? {
-            return Ok(entry.path());
+    while let Some(parent_dir) = curr_dir.parent() {
+        for entry in fs::read_dir(curr_dir)? {
+            let entry = entry?;
+
+            if dir_entry_is_cargo_lockfile(&entry)? {
+                return Ok(entry.path());
+            }
         }
+
+        curr_dir = parent_dir;
     }
 
     Err(LockFileSearchError::UnableToFindLockFile(
@@ -45,14 +52,11 @@ fn dir_entry_is_cargo_lockfile(e: &DirEntry) -> Result<bool, io::Error> {
 
 #[cfg(test)]
 mod tests {
-    use super::find_cargo_lock_file;
+    use super::find_cargo_lock_file_path;
 
     #[test]
     fn find_cargo_lock_path_works() {
-        let res = find_cargo_lock_file();
-
-        println!("Res: {:?}", res);
-
+        let res = find_cargo_lock_file_path();
         assert!(res.is_ok())
     }
 }
